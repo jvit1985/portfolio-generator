@@ -1,5 +1,26 @@
 const inquirer = require('inquirer');
 
+const fs = require('fs');
+
+const generatePage = require('./src/page-template.js');
+
+// const mockData = {
+//     name: 'Justin',
+//     github: 'jvit1985',
+//     confirmAbout: true,
+//     about: 'here is some info about me',
+//     projects: [
+//       {
+//         name: 'trending ape',
+//         description: 'here is a description of the trending ape project',
+//         language: [Array],
+//         link: 'jvit1985/trending-ape',
+//         feature: true,
+//         confirmAddProject: false
+//       }
+//     ]
+//   };
+
 const promptUser = () => {
     return inquirer.prompt([
         {
@@ -87,7 +108,7 @@ if (!portfolioData.projects) {
         },
         {
             type:'checkbox',
-            name:'language',
+            name:'languages',
             message:'What did you build this project with? (Check all that apply)',
             choices: ['JavaScript', 'HTML', 'CSS', 'ES6', 'jQuery', 'Bootstrap', 'Node']
         },
@@ -127,15 +148,21 @@ if (!portfolioData.projects) {
         });
 };
 
+// const pageHTML = generatePage(mockData);
+
 promptUser()
     .then(promptProject)
     .then(portfolioData => {
-        console.log(portfolioData);
+        const pageHTML = generatePage(portfolioData);
+
+        // const [name, github] = profileDataArgs;
+
+        fs.writeFile('index.html', pageHTML, err => {
+            if (err) throw err;
+
+            console.log('Portfolio complete! Check out index.html to see the output!');
+        });
     });
-
-// const fs = require('fs');
-
-// const generatePage = require('./src/page-template.js');
 
 // const pageHTML = generatePage(name, github);
 
